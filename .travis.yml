@@ -2,27 +2,26 @@ sudo: required
 services:
   - docker
 
-  before_install:
-    - docker build -t saktisingh/react-test -f ./client/Dockerfile.dev ./client
+before_install:
+  - docker build -t saktisingh/react-test -f ./client/Dockerfile.dev ./client
   
-  script:
-    - docker run saktisingh/react-test npm test -- --coverage
+script:
+  - docker run saktisingh/react-test npm test -- --coverage
 
-  after_success:
-    - docker build -t saktisingh/multi-client ./client
-    - docker build -t saktisingh/multi-nginx ./nginx
-    - docker build -t saktisingh/multi-server ./server
-    - docker build -t saktisingh/multi-worker ./worker
-    
-    # Log in to docker CLI
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+after_success:
+  - docker build -t saktisingh/multi-client ./client
+  - docker build -t saktisingh/multi-nginx ./nginx
+  - docker build -t saktisingh/multi-server ./server
+  - docker build -t saktisingh/multi-worker ./worker
 
-    # Take those images and push them to docker hub
-    - docker push saktisingh/multi-client
-    - docker push saktisingh/multi-nginx
-    - docker push saktisingh/multi-server
-    - docker push saktisingh/multi-worker
+  # Log in to docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
 
+  # push the images to docker hub
+  - docker push saktisingh/multi-client
+  - docker push saktisingh/multi-nginx
+  - docker push saktisingh/multi-server
+  - docker push saktisingh/multi-worker
     
 
   
